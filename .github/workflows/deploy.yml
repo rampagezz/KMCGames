@@ -1,0 +1,31 @@
+name: Deploy KMC Games Website to Nordicway
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: 🚀 Deploy Website to Nordicway Webhotel
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Hent repository kildekode
+        uses: actions/checkout@v4
+
+      - name: 🌐 Overfør via FTP til Nordicway (/public_html/kmcgames.com/)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/kmcgames.com/
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/scripts/**
+            **/node_modules/**
+            **/README.md
+          dangerous-clean-slate: false
